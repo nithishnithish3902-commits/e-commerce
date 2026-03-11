@@ -1,0 +1,33 @@
+{% extends "shop/layout/main.html" %}
+{% block title %}Home Page{% endblock %}
+{% block content %}
+{% include "shop/includes/slider.html" %}
+
+<section class="bg-light py-4 my-5">
+   <div class="container">
+     <div class="row">
+       <div class="col-md-12"><h4 style="font-size:30px; font-weight:medium;" class="display-4">Latest Offers</h4>
+        </div>
+        {% for item in products %}
+        <div class="col-md-3 mb-4">
+            <a href="{% url 'products_name' item.category.name item.name %}" class="text-decoration-none">
+                <div class="card">
+                    <img src="{{item.product_images.url}}" class="card-img-top" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">
+                    
+                    <div class="card-body">
+                        <h5 class="card-title text-dark">{{ item.name }}</h5>
+                        <div class="d-flex justify-content-between align-items-center">
+                         <span style=" text-decoration: line-through; font-weight: bold; color: red;">Rs{{item.original_price}}</span>
+                          <span style="color: green; font-weight: bold;">Rs{{item.selling_price}}</span>
+                    </div>
+                   </div>
+                </div>
+            </a>
+        </div>
+        
+        {% endfor %}
+      </div>
+    </div>
+ </section>
+
+{% endblock %}

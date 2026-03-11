@@ -1,0 +1,63 @@
+{% extends "shop/layout/main.html" %}
+{% block title %}Register Page{% endblock %}
+{% block content %}
+<div class="container"style="margin-top: 65px;">
+ <div class="row">
+  <div class="col-12">
+    <h1 >NEW USER REGISTRATION</h1>
+    
+  </div>
+ </div>
+</div>
+<section class="py-4 my-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-6">
+        <form method="POST" action="">
+          {% csrf_token %}
+          <div class="mb-4">
+            <label for="username" class="form-label">Username</label>
+          {{ form.username }}
+          {% if form.username.errors %}
+            <label class="text-danger">
+              {{ form.username.errors }}
+            </label>
+          {% endif %}
+          </div>
+          <div class="mb-4">
+            <label for="email" class="form-label">Email</label>
+          {{ form.email }}
+            {% if form.email.errors %}
+              <label class="text-danger">
+                {{ form.email.errors }}
+              </label>
+            {% endif %}
+          </div>
+          <div class="mb-4">
+            <label for="password1" class="form-label">Password</label>
+          {{ form.password1 }}
+            {% if form.password1.errors %}
+                <label class="text-danger">
+                  {{ form.password1.errors }}
+                </label>
+              {% endif %}
+          </div>
+          <div class="mb-4">
+            <label for="password2" class="form-label">Confirm Password</label>
+          {{ form.password2 }}
+            {% if form.password2.errors %}
+                <label class="text-danger">
+                  {{ form.password2.errors }}
+                </label>
+              {% endif %}
+          </div>
+
+          <button type="submit" class="btn btn-primary">Register</button>
+        </form>
+        <p class="mt-3">Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+      </div>
+    </div>
+    </div>
+
+  </section>
+{% endblock %}

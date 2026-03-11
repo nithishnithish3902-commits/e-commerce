@@ -1,0 +1,138 @@
+{% extends "shop/layout/main.html" %}
+{% block title %} Products{% endblock %}
+{% block content %}
+ <section class="bg-light py-4 my-5" style="min-height: 400px;">
+   <div class="container">
+     <div class="row">
+       <div class="col-md-12">
+         <h4 style="font-size:30px; font-weight:medium;" class="display-4">{{products.name}} Details</h4>
+         <hr style="border-color:#b8bfc2;">
+          <nav aria-label="breadcrumb">
+           <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'collections' products.category.name %}">collection</a></li>
+             <li class="breadcrumb-item active" aria-current="page">{{products.name}}</li>
+            </ol>
+            {% include "shop/includes/message.html" %}
+          </nav>
+        </div>
+        <div style="position: relative;" class="col-md-6 pic-box">
+           {% if products.quantity  %}
+           <div  style="background-color: orange; color: white; width: 40px;  border-radius: 5px; text-align: center; position: absolute;  " class="hot">hot</div>
+            {% endif %}
+          <img src="{{products.product_images.url}}" alt="{{products.name}}" class="img-fluid">      
+      </div>
+      <div class="col-6 my-2">
+        <h5 class="text-success">{{products.name | upper}}</h5>
+         <p >Vendor : {{products.vendor}}</p>
+         <p> {{products.description}}</p>
+         <h6 class="my-2 text-danger">current price :Rs.<s>{{products.original_price}}</s></h6>
+         <h6 class="my-2 text-primary">offer price :Rs.{{products.selling_price}}</h6>
+         <div class="my-2">
+          {% if products.quantity > 0 %}
+          <input type="hidden" id="pid" value="{{products.id}}">
+        
+          <p>  
+               <div class="input-group" style="width:150px;">
+                <button class="input-group-text bg-success text-light "id="btnminus"><i class="bi bi-dash"></i></button>
+                 <input type="text" name="qty" id="txtqty" value="1" class="form-control text-center">
+                 <button class="input-group-text bg-success text-light "id="btnplus"><i class="bi bi-plus"></i></button>
+                         </div>   
+          </p>
+           <button class="btn btn-primary" id="btncart"><i class="bi bi-cart" ></i> Add to Cart</button>
+            {% else %}
+            <button class="btn btn-secondary"><i class="bi bi-cart"></i> Out of stack</button>
+            {% endif %}
+            <button class="btn btn-danger"><i class="bi bi-heart"></i> </button>
+
+
+        </div>
+    </div>
+ </section>
+ <script>
+ 
+
+
+
+
+document.addEventListener("DOMContentLoaded", function(){
+   const btnplus = document.getElementById("btnplus");
+    const btnminus = document.getElementById("btnminus");
+     const txtqty = document.getElementById("txtqty");
+      const pid = document.getElementById("pid"); 
+      const btncart = document.getElementById("btncart"); 
+
+      btnplus.addEventListener("click", function(){ 
+        let qty = parseInt(txtqty.value,10);
+         qty = isNaN(qty) ? 0 : qty; 
+         if(qty < 10){ 
+          qty++; txtqty.value = qty; 
+        } 
+      }); 
+
+      btnminus.addEventListener("click", function(){ 
+        let qty = parseInt(txtqty.value,10); 
+        qty = isNaN(qty) ? 0 : qty; 
+        if(qty > 1){
+           qty--; 
+           txtqty.value = qty; 
+          } 
+        }); 
+        
+
+        btncart.addEventListener("click", function(){
+           let qty = parseInt(txtqty.value,10);
+            qty = isNaN(qty) ? 0 : qty; 
+            if(qty > 0){ 
+              let postobj = {
+                 'product_qty': 
+                 qty, 'pid': pid.value 
+                } 
+                fetch("{% url 'add_to_cart' %}",{ 
+                  method:"POST", 
+                  credentials:"same-origin", 
+                  headers:{ 
+                    'Accept':'application/json', 
+                    'X-Requested-With':'XMLHttpRequest', 
+                    'X-CSRFToken':'{{csrf_token}}' 
+                  }, 
+                  body:JSON.stringify(postobj)
+                 }) 
+                 .then(response => response.json()) 
+                 .then(data =>{ alert(data['status']);
+                 }); 
+                 
+                }else 
+                { 
+                  alert("Please enter a valid quantity"); 
+                } 
+              }); 
+            });
+
+
+
+function liveSearch() {
+    let query = document.getElementById("search-input").value;
+
+    fetch(`/search/?q=${query}`)
+    .then(response => response.json())
+    .then(data => {
+        let results = document.getElementById("search-results");
+        results.innerHTML = "";
+
+        data.products.forEach(product => {
+            results.innerHTML += `
+                <div>
+                    <a href="/product/${product.id}">
+                        ${product.name}
+                    </a>
+                </div>
+            `;
+        });
+    });
+}
+
+
+ </script>
+
+{% endblock %}

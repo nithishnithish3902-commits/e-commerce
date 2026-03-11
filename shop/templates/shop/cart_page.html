@@ -1,0 +1,51 @@
+{% extends "shop/layout/main.html" %}
+{% block title %}cart{% endblock %}
+{% block content %}
+
+          <section class="py-5 bg-light">
+    <div class="container">
+        <h1 class="display-4">Cart</h1>
+        <p class="lead">You have {{cart_items}} items in your cart.</p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Image</th>
+                    <th scope="col">Product name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">amount</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart %}
+                <tr>
+                    <td><img src="{{item.product.product_images.url}}" alt="{{item.product.name}}" style="width: 100px; height: 100px; object-fit: cover;"></td>
+                    <td>{{item.product.name}}</td>
+                    <td>Rs{{item.product.selling_price}}</td>
+                      <td>{{item.product_qty}}</td>
+                    <td id="amt">rs{{item.total_cost}}</td>
+                    <td><a href="{% url 'remove_from_cart' item.id %}" onclick="return confirm('Are you sure?to remove this item')" class="btn btn-danger"><i class="bi bi-trash"></i> Remove</a></td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="4" class="text-end">Total Amount:</td>
+                    <td id="net"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+<script>
+   const nodes = document.querySelectorAll('.amt');
+   const arr = Array.from(nodes);
+   const res = arr.reduce((acc, curr) => {
+    return acc+= Number (curr.textContent);
+   },0);
+   document.getElementById('net').innerHTML = "Rs" + res;
+  
+</script>
+       
+{% endblock %}
+
+

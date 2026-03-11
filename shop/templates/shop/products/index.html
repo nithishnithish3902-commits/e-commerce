@@ -1,0 +1,37 @@
+{% extends "shop/layout/main.html" %}
+{% block title %} Products{% endblock %}
+{% block content %}
+ <section class="bg-light py-4 my-5">
+   <div class="container">
+     <div class="row">
+       <div class="col-md-12">
+         <h4 style="font-size:30px; font-weight:medium;" class="display-4">{{category_name}} Products</h4>
+         <hr style="border-color:#b8bfc2;">
+         {% include "shop/includes/message.html" %}
+        </div>
+        {% for item in products %}
+        <div class="col-md-3 mb-4">
+               <a href="{% url 'products_name' category_name item.name %}" class="text-decoration-none">
+                <div class="card">
+                  {% if item.product_images %}
+                    <img src="{{ item.product_images.url }}" alt="{{ item.name }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                    <img src='{{ STATIC_URL }}images/default-product-image.jpg' alt="Default Image" class="card-img-top" style="height: 200px; object-fit: cover;">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title text-dark">{{ item.name }}</h5>
+                        <div class="d-flex justify-content-between align-items-center">
+                         <span style=" text-decoration: line-through; font-weight: bold; color: red;">Rs{{item.original_price}}</span>
+                          <span style="color: green; font-weight: bold;">Rs{{item.selling_price}}</span>
+                    </div>
+                   </div>
+                </div>
+            </a>
+        </div>
+        
+        {% endfor %}
+      </div>
+    </div>
+ </section>
+
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "shop/layout/main.html" %}
+{% block title %}Collections{% endblock %}
+{% block content %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <h1 class="display-4">Our Collections</h1>
+        <p class="lead">Explore our wide range of products categorized for your convenience.</p>
+      {% include "shop/includes/message.html" %}
+    <p>
+        <a href="{% url 'home' %}" class="btn btn-primary my-2" >Back to Home</a>
+        <a href="{% url 'register' %}" class="btn btn-secondary my-2">Register</a>
+        </div> 
+</section>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Collections</h2>
+            <hr>
+        </div>
+        {% for item in category %}
+        <div class="col-md-3 mb-4">
+            <a href="{% url 'collections' item.name %}" class="text-decoration-none">
+                <div class="card">
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title text-dark">{{ item.name }}</h5>
+                       <p class="card-text text-muted">{{ item.description }}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+   
+  
+{% endblock content %}
